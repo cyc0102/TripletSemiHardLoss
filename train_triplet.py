@@ -12,10 +12,10 @@ def _normalize_img(img, label):
 train_dataset, test_dataset = tfds.load(name="mnist", split=['train', 'test'], as_supervised=True)
 
 # Build your input pipelines
-train_dataset = train_dataset.shuffle(1024).batch(16)
+train_dataset = train_dataset.shuffle(1024).batch(32)
 train_dataset = train_dataset.map(_normalize_img)
 
-test_dataset = test_dataset.batch(16)
+test_dataset = test_dataset.batch(32)
 test_dataset = test_dataset.map(_normalize_img)
 
 model = tf.keras.Sequential([
@@ -37,7 +37,7 @@ model.compile(
 # Train the network
 history = model.fit(
     train_dataset,
-    epochs=5)
+    epochs=10)
 
 # Evaluate the network
 results = model.predict(test_dataset)   
@@ -58,4 +58,4 @@ try:
 except:
   pass
 
-
+# The vector and metadata files can be loaded and visualized here: https://projector.tensorflow.org/
