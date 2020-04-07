@@ -38,3 +38,6 @@ model.compile(
 history = model.fit(
     train_dataset,
     epochs=5)
+
+# Evaluate the network
+results = model.predict(test_dataset)   
