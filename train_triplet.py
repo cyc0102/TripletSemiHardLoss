@@ -12,10 +12,10 @@ def _normalize_img(img, label):
 train_dataset, test_dataset = tfds.load(name="mnist", split=['train', 'test'], as_supervised=True)
 
 # Build your input pipelines
-train_dataset = train_dataset.shuffle(1024).batch(32)
+train_dataset = train_dataset.shuffle(1024).batch(16)
 train_dataset = train_dataset.map(_normalize_img)
 
-test_dataset = test_dataset.batch(32)
+test_dataset = test_dataset.batch(16)
 test_dataset = test_dataset.map(_normalize_img)
 
 model = tf.keras.Sequential([
@@ -41,3 +41,21 @@ history = model.fit(
 
 # Evaluate the network
 results = model.predict(test_dataset)   
+
+# Save test embeddings for visualization in projector
+np.savetxt("vecs.tsv", results, delimiter='\t')
+
+out_m = io.open('meta.tsv', 'w', encoding='utf-8')
+for img, labels in tfds.as_numpy(test_dataset):
+    [out_m.write(str(x) + "\n") for x in labels]
+out_m.close()
+
+
+try:
+  from google.colab import files
+  files.download('vecs.tsv')
+  files.download('meta.tsv')
+except:
+  pass
+
+
